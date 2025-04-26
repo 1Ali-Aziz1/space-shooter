@@ -24,8 +24,8 @@ class Sprite(turtle.Turtle):
         
         self.speed = 1
         
-    def move(self):
-        self.forward(self.speed)
+    # def move(self):
+    #     self.forward(self.speed)
         
 class Player(Sprite):
     def __init__(self, color, SpriteShape, x, y):
@@ -33,15 +33,24 @@ class Player(Sprite):
         self.speed = 4
         self.lives = 3
         
+    def left(self):
+        self.left(45)
         
+    def right(self):
+        self.right(45)
         
 
 #Sprites
 player = Player("white", "triangle", 0, 0)
 
+#keys binding
+turtle.onkey(player.left, "Left")
+turtle.onkey(player.right, "Right")
+turtle.listen()
+
 #Main loop
 while True:
-    player.move()
+    # player.move()
+    delay = input("Press enter to finish.")
+    
 
-
-delay = input("Press enter to finish.")
