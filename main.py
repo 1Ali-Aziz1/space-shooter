@@ -27,6 +27,23 @@ class Sprite(turtle.Turtle):
     def move(self):
         self.forward(self.speed)
         
+        #Boundary detection
+        if self.xcor() > 290:
+            self.rt(60)
+            self.setx(290)
+        
+        if self.xcor() < -290:
+            self.rt(60)
+            self.setx(-290)
+        
+        if self.ycor() > 290:
+            self.rt(60)
+            self.sety(290)
+        
+        if self.ycor() < -290:
+            self.rt(60)
+            self.sety(-290)
+        
 class Player(Sprite):
     def __init__(self, color, SpriteShape, x, y):
         Sprite.__init__(self, color, SpriteShape, x, y)
@@ -45,14 +62,44 @@ class Player(Sprite):
     def decelerate(self):
         self.speed -= 1
         
+class Game():
+    def __init__(self):
+      self.score = 0
+      self.level = 1
+      self.state = "playing"
+      self.pen = turtle.Turtle()
+      self.lives = 3
+      
+    def draw_border(self):
+        self.pen.speed(0)
+        self.pen.pensize(3)
+        self.pen.color("white")
+        self.pen.penup()
+        self.pen.goto(-300, -300)
+        self.pen.pendown()
+        for side in range(4):
+            self.pen.forward(600)
+            self.pen.lt(90)
+        self.pen.penup()
+        # self.pen.goto(400, -300)
+        # self.pen.goto(400, 300)
+        # self.pen.goto(-400, 300)
+        # self.pen.goto(-400, -300)
+        self.pen.ht()
+        
+#Creating game object
+game = Game()
+
+#Creating the border
+game.draw_border()
 
 #Sprites
 player = Player("white", "triangle", 0, 0)
 
 #keys binding
-turtle.onkey(player.left, "D")
-turtle.onkey(player.right, "R")
-turtle.onkey(player.accelerate, "W")
+turtle.onkey(player.left, "Right")
+turtle.onkey(player.right, "Left")
+turtle.onkey(player.accelerate, "Up")
 turtle.onkey(player.decelerate, "Down")
 turtle.listen()
 
