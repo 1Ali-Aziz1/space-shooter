@@ -62,6 +62,12 @@ class Player(Sprite):
     def decelerate(self):
         self.speed -= 1
         
+class Enemy(Sprite):
+    def __init__(self, color, SpriteShape, startx, starty):
+        Sprite.__init__(self, color, SpriteShape, startx, starty)
+        self.speed = 6
+        self.setheading(random.randint(0, 360))
+        
 class Game():
     def __init__(self):
       self.score = 0
@@ -95,6 +101,7 @@ game.draw_border()
 
 #Sprites
 player = Player("white", "triangle", 0, 0)
+enemy = Enemy("red", "circle", random.randint(-290, 290), random.randint(-290, 290))
 
 #keys binding
 turtle.onkey(player.left, "Right")
@@ -106,6 +113,7 @@ turtle.listen()
 #Main loop
 while True:
     player.move()
+    enemy.move()
     # delay = input("Press enter to finish.")
     
 
