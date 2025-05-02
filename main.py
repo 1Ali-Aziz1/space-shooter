@@ -14,6 +14,7 @@ turtle.setundobuffer(1)#Save the memory
 #Classes
 class Sprite(turtle.Turtle):
     def __init__(self, color, SpriteShape, x, y):
+        #Initialize the sprite with the given color and shape
         turtle.Turtle.__init__(self, shape = SpriteShape)
         self.color(color)
         self.shape(SpriteShape)
@@ -52,7 +53,7 @@ class Player(Sprite):
         
     def left(self):
         self.lt(45)
-        
+
     def right(self):
         self.rt(45)
         
@@ -62,6 +63,13 @@ class Player(Sprite):
     def decelerate(self):
         self.speed -= 1
         
+    def is_collision(self, other):
+        if (self.xcor() > other.xcor() - 20) and (self.xcor() < other.xcor() + 20):
+            if (self.ycor() > other.ycor() - 20) and (self.ycor() < other.ycor() + 20):
+                return True
+        else:
+            return False
+        
 class Enemy(Sprite):
     def __init__(self, color, SpriteShape, startx, starty):
         Sprite.__init__(self, color, SpriteShape, startx, starty)
@@ -69,6 +77,7 @@ class Enemy(Sprite):
         self.setheading(random.randint(0, 360))
         
 class Game():
+    #Game class to manage the border, game state and score.
     def __init__(self):
       self.score = 0
       self.level = 1
@@ -87,10 +96,7 @@ class Game():
             self.pen.forward(600)
             self.pen.lt(90)
         self.pen.penup()
-        # self.pen.goto(400, -300)
-        # self.pen.goto(400, 300)
-        # self.pen.goto(-400, 300)
-        # self.pen.goto(-400, -300)
+        
         self.pen.ht()
         
 #Creating game object
@@ -114,6 +120,10 @@ turtle.listen()
 while True:
     player.move()
     enemy.move()
-    # delay = input("Press enter to finish.")
     
-
+    #Check for collision
+    if player.is_collision(enemy):
+        x = random.randint(-290, 290)
+        y = random.randint(-290, 290)
+        enemy.goto(x, y)
+    
