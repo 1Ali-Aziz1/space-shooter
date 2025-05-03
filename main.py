@@ -7,9 +7,12 @@ import turtle
 turtle.fd(0)#required in MacOS
 turtle.bgcolor("black")
 turtle.speed(0)
-turtle.hideturtle()#Hides the turtle
+turtle.ht()#Hides the turtle
 turtle.tracer(1)#Speeds up the drawing
 turtle.setundobuffer(1)#Save the memory
+
+#Set the screen size
+turtle.setup(650, 650)
 
 #Classes
 class Sprite(turtle.Turtle):
@@ -50,6 +53,7 @@ class Player(Sprite):
         Sprite.__init__(self, color, SpriteShape, x, y)
         self.speed = 4
         self.lives = 3
+        self.shapesize(0.8, 1.5, outline=None)
         
     def left(self):
         self.lt(45)
@@ -75,6 +79,30 @@ class Enemy(Sprite):
         Sprite.__init__(self, color, SpriteShape, startx, starty)
         self.speed = 6
         self.setheading(random.randint(0, 360))
+        
+class Missile(Sprite):
+    def __init__(self, color, SpriteShape, startx, starty):
+        Sprite.__init__(self, color, SpriteShape, startx, starty)
+        self.shapesize(0.3, 0.6, outline=None)
+        self.speed = 20
+        self.status = "ready"
+        self.goto(-1000, 1000) # Hide the missile off screen
+        
+    def fire(self):
+        if self.status == "ready":
+            self.setheading(player.heading())
+            self.goto(player.xcor(), player.ycor())
+            self.status = "fire"
+            # self.forward(10)
+        
+    def move(self):
+        if self.status == "fire":
+            self.fd(self.speed)
+        
+        #border detection
+        if self.xcor() > 290 or self.xcor() < -290 or self.ycor() > 290 or self.ycor() < -290:
+            self.goto(-1000, 1000)
+            self.status = "ready"
         
 class Game():
     #Game class to manage the border, game state and score.
@@ -108,18 +136,23 @@ game.draw_border()
 #Sprites
 player = Player("white", "triangle", 0, 0)
 enemy = Enemy("red", "circle", random.randint(-290, 290), random.randint(-290, 290))
+missile = Missile("yellow", "triangle", 0, 0)
 
 #keys binding
-turtle.onkey(player.left, "Right")
-turtle.onkey(player.right, "Left")
-turtle.onkey(player.accelerate, "Up")
-turtle.onkey(player.decelerate, "Down")
+turtle.onkey(player.left, "a")
+turtle.onkey(player.right, "d")
+turtle.onkey(player.accelerate, "w")
+turtle.onkey(player.decelerate, "s")
+turtle.onkey(missile.fire, "space")
 turtle.listen()
 
 #Main loop
 while True:
     player.move()
     enemy.move()
+    # missile.move()
+    
+    turtle.update()
     
     #Check for collision
     if player.is_collision(enemy):
